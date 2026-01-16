@@ -1,17 +1,20 @@
 console.log("SNAKE FILE CONTENT HASH:", Math.random())
 class Snake {
     head: HTMLElement
+    // All body parts
     bodies: HTMLCollection
+    // Main snake container
     element: HTMLElement
 
     constructor() {
         this.element = document.getElementById('snake')!
-        // First -> Head
+        // First div -> Head
         this.head = document.querySelector('#snake>div') as HTMLElement
+        // All segments
         this.bodies = this.element.getElementsByTagName('div')
     }
 
-    // Get snake head coordinates
+    // Get snake head position(X & Y)
     get X() {
         return this.head.offsetLeft
     }
@@ -20,13 +23,15 @@ class Snake {
     }
 
     set X(value: number) {
+        // No move, skip
         if (this.X === value)
             return
-
+        // Wall hit
         if (value < 0 || value > 290) {
             throw new Error("! GAME OVER !")
         }
 
+        // Prevent 180 turn(X)
         if (this.bodies[1] && (this.bodies[1] as HTMLElement).offsetLeft === value) {
             if (value > this.X) {
                 value = this.X - 10
@@ -35,9 +40,11 @@ class Snake {
             }
         }
 
-        // Move
+        // Move body first
         this.moveBody()
+        // Move head
         this.head.style.left = value + 'px'
+        // Self hit check
         this.checkHeadBody()
 
     }
@@ -50,6 +57,7 @@ class Snake {
             throw new Error("! GAME OVER !")
         }
 
+        // Prevent 180 turn(Y)
         if (this.bodies[1] && (this.bodies[1] as HTMLElement).offsetTop === value) {
             if (value > this.Y) {
                 value = this.Y - 10
@@ -69,8 +77,9 @@ class Snake {
     }
 
     moveBody() {
+        // Tail -> Head
         for (let i = this.bodies.length - 1; i > 0; i--) {
-            // Front body position
+            // Prev segment pos
             let X = (this.bodies[i - 1] as HTMLElement).offsetLeft
             let Y = (this.bodies[i - 1] as HTMLElement).offsetTop
 

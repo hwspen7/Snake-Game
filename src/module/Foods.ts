@@ -4,7 +4,7 @@ class Food {
         this.element = document.getElementById('food')!
     }
 
-    // Get food position X and Y
+    // Get food position(X & Y)
     get X() {
         return this.element.offsetLeft
     }
