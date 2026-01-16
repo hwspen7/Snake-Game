@@ -1,12 +1,14 @@
-const path = require('path');
-const HTMLWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
+    mode: "development",
+
     entry: "./src/index.ts",
 
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, "dist"),
         filename: "bundle.js",
 
         environment: {
@@ -15,10 +17,23 @@ module.exports = {
         }
     },
 
+    devtool: "inline-source-map",
+
+    devServer: {
+        static: {
+            directory: path.resolve(__dirname, "dist")
+        },
+        port: 8080,
+        open: true,
+        hot: true,
+        compress: true
+    },
+
     module: {
         rules: [
             {
                 test: /\.ts$/,
+                exclude: /node_modules/,
                 use: [
                     {
                         loader: "babel-loader",
@@ -28,23 +43,23 @@ module.exports = {
                                     "@babel/preset-env",
                                     {
                                         targets: {
-                                            "chrome": "58",
-                                            "ie": "11"
+                                            chrome: "58",
+                                            ie: "11"
                                         },
-                                        "corejs": "3",
-                                        "useBuiltIns": "usage"
+                                        corejs: "3",
+                                        useBuiltIns: "usage"
                                     }
                                 ]
                             ]
                         }
                     },
-                    'ts-loader'
-                ],
-                exclude: /node-modules/
+                    "ts-loader"
+                ]
             },
 
+            // SCSS / Sass
             {
-                test: /\.less$/,
+                test: /\.scss$/,
                 use: [
                     "style-loader",
                     "css-loader",
@@ -53,17 +68,12 @@ module.exports = {
                         options: {
                             postcssOptions: {
                                 plugins: [
-                                    [
-                                        "postcss-preset-env",
-                                        {
-                                            browsers: 'last 2 versions'
-                                        }
-                                    ]
+                                    ["postcss-preset-env", { browsers: "last 2 versions" }]
                                 ]
                             }
                         }
                     },
-                    "less-loader"
+                    "sass-loader"
                 ]
             }
         ]
@@ -71,13 +81,12 @@ module.exports = {
 
     plugins: [
         new CleanWebpackPlugin(),
-        new HTMLWebpackPlugin({
+        new HtmlWebpackPlugin({
             template: "./src/index.html"
-        }),
+        })
     ],
 
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: [".ts", ".js"]
     }
-
 };
