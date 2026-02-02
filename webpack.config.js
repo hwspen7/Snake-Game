@@ -57,7 +57,7 @@ module.exports = {
                 ]
             },
 
-            // SCSS / Sass
+            // SCSS
             {
                 test: /\.scss$/,
                 use: [
